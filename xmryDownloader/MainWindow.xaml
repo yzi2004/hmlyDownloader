@@ -1,0 +1,47 @@
+﻿<Window x:Class="xmryDownloader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:xmryDownloader"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="900" FontSize="14" FontFamily="Microsoft YaHei UI" ResizeMode="NoResize">
+    <Canvas Background="#FFF6EA" >
+        <Canvas.Resources>
+            <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+        </Canvas.Resources>
+        <Label Content="专辑ID" Canvas.Left="9" Canvas.Top="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Canvas.Left="64" TextWrapping="Wrap" Text="TextBox" Canvas.Top="10" Width="97" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" HorizontalContentAlignment="Left" FontSize="16"/>
+        <Button Content="解析" Canvas.Left="228" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="40"/>
+        <Label Content="下载目录" Canvas.Left="273" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="1.071,0.505"/>
+        <TextBox Canvas.Left="347" TextWrapping="Wrap" Text="TextBox" Canvas.Top="11" Width="503" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" FontSize="16" />
+        <Label Content="专辑名称" Canvas.Left="24" Canvas.Top="52" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Label Content="音频数量" Canvas.Left="772" Canvas.Top="52" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Canvas.Left="838" TextWrapping="Wrap" Text="" x:Name="lblCount" Canvas.Top="52" Background="#FFD2ECE9" Height="27" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center" />
+
+        <DataGrid Canvas.Top="86" Canvas.Left="13"
+                  Name="dgSubtitle" 
+                  AutoGenerateColumns="False" 
+                  SelectionUnit="Cell" 
+                  PreviewMouseDoubleClick="dgSubtitle_PreviewMouseDoubleClick"
+                  PreviewKeyDown="dgSubtitle_PreviewKeyDown" HorizontalAlignment="Center" Height="453" VerticalAlignment="Top" Width="875">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="" Width="30" Binding="{Binding Base.index}" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
+                <DataGridTextColumn Header="标题" Width="295" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                <DataGridTextColumn Header="时长" Width="65" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                <DataGridTextColumn Header="播放地址" Width="*" CanUserSort="False" CanUserResize="False" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Content="全选" Canvas.Left="16" Canvas.Top="552" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button Content="取消选择" Canvas.Left="56" Canvas.Top="552" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Border BorderBrush="Black" BorderThickness="1" Height="1" Width="880" HorizontalAlignment="Center" Canvas.Left="10" VerticalAlignment="Top" Canvas.Top="46"></Border>
+        <TextBlock x:Name="lblTitle" Canvas.Left="91" TextWrapping="Wrap" Canvas.Top="52" Background="#FFD2ECE9" Width="647" Height="27" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button Content="…" Canvas.Left="857" Canvas.Top="11" HorizontalAlignment="Center" VerticalAlignment="Center" Width="34" Height="27"/>
+        <CheckBox Content="降序" Canvas.Left="169" Canvas.Top="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    </Canvas>
+</Window>
