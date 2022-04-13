@@ -14,7 +14,7 @@
         </Canvas.Resources>
         <Label Content="专辑ID" Canvas.Left="9" Canvas.Top="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBox Canvas.Left="64" TextWrapping="Wrap" Text="TextBox" Canvas.Top="10" Width="97" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" HorizontalContentAlignment="Left" FontSize="16"/>
-        <Button Content="解析" Canvas.Left="228" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="40"/>
+        <Button Content="解析" Canvas.Left="228" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="40" Click="Button_Click"/>
         <Label Content="下载目录" Canvas.Left="273" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="1.071,0.505"/>
         <TextBox Canvas.Left="347" TextWrapping="Wrap" Text="TextBox" Canvas.Top="11" Width="503" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" FontSize="16" />
         <Label Content="专辑名称" Canvas.Left="24" Canvas.Top="52" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -25,8 +25,7 @@
                   Name="dgSubtitle" 
                   AutoGenerateColumns="False" 
                   SelectionUnit="Cell" 
-                  PreviewMouseDoubleClick="dgSubtitle_PreviewMouseDoubleClick"
-                  PreviewKeyDown="dgSubtitle_PreviewKeyDown" HorizontalAlignment="Center" Height="453" VerticalAlignment="Top" Width="875">
+                  HorizontalAlignment="Center" Height="453" VerticalAlignment="Top" Width="875">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="" Width="30" Binding="{Binding Base.index}" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />

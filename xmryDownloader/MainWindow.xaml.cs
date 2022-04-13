@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,13 @@ namespace xmryDownloader
         public MainWindow()
         {
             InitializeComponent();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            WebAccess wa = new WebAccess();
+            var data = await wa.Get("");
         }
     }
 }
