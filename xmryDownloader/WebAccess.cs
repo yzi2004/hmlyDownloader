@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -18,15 +19,21 @@ namespace xmryDownloader
             _httpClient.Timeout = new TimeSpan(0, 1, 30); //90秒
         }
 
-        public async Task<GetAlbumInfoResponse> Get(string url)
+        public async Task<GetAlbumInfoResponse> GetAlbumTrackList(string albumID, bool ascFlg = true)
         {
-            url = $"http://mobile.ximalaya.com/mobile-album/album/page/ts-{Utils.GetUnixTime()}?ac=WIFI&albumId=2780581&device=android&pageId=1&pageSize=0";
+            string url = $"https://mobile.ximalaya.com/mobile/v1/album/track/ts-{Utils.GetUnixTime()}?ac=WIFI&albumId={albumID}&device=android&isAsc={ascFlg}&pageId=1&pageSize=200";
+
+            return await Get(url);
+        }
+
+        private async Task<GetAlbumInfoResponse> Get(string url)
+        {
             HttpResponseMessage resp = await _httpClient.GetAsync(url);
             resp.EnsureSuccessStatusCode();
             var byteData = await resp.Content.ReadAsByteArrayAsync();
 
             string json = Encoding.UTF8.GetString(byteData);
-
+            File.AppendAllText("c:\\temp\\aaa.json", json);
             var data = JsonSerializer.Deserialize<GetAlbumInfoResponse>(json);
 
             return data;

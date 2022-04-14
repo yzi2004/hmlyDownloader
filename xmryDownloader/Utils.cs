@@ -18,5 +18,32 @@ namespace xmryDownloader
 
             return (long)elapsedTime.TotalSeconds;
         }
+
+        public static TimeSpan GetTimeDur(int duration)
+        {
+            int second = 0, minute = 0, hour = 0;
+            if (duration <= 60)
+            {
+                second = duration;
+            }
+            else
+            {
+                second = duration % 60;
+                duration = duration / 60;
+            }
+
+            if (duration <= 60)
+            {
+                minute = duration;
+            }
+            else
+            {
+                minute = duration % 60;
+                hour = duration / 60;
+            }
+
+            return new TimeSpan(hour, minute, second);
+        }
+
     }
 }

@@ -27,10 +27,20 @@ namespace xmryDownloader
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+
+        private async void btnLoad_Click(object sender, RoutedEventArgs e)
         {
+            if(string.IsNullOrWhiteSpace(txtAlbumId.Text))
+            {
+                MessageBox.Show("要先输入专辑ID哦！");
+                return;
+            }
+
+
             WebAccess wa = new WebAccess();
-            var data = await wa.Get("");
+            var data = await wa.GetAlbumTrackList(txtAlbumId.Text);
+
+
         }
     }
 }

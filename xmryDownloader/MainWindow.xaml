@@ -5,27 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:xmryDownloader"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="900" FontSize="14" FontFamily="Microsoft YaHei UI" ResizeMode="NoResize">
-    <Canvas Background="#FFF6EA" >
-        <Canvas.Resources>
+        Title="喜马拉雅听书下载【只能下载免费书哦】" Height="625" Width="917" FontSize="14" FontFamily="Microsoft YaHei UI" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+    <Grid Background="#FFF6EA" >
+        <Grid.Resources>
             <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
-        </Canvas.Resources>
-        <Label Content="专辑ID" Canvas.Left="9" Canvas.Top="9" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox Canvas.Left="64" TextWrapping="Wrap" Text="TextBox" Canvas.Top="10" Width="97" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" HorizontalContentAlignment="Left" FontSize="16"/>
-        <Button Content="解析" Canvas.Left="228" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="40" Click="Button_Click"/>
-        <Label Content="下载目录" Canvas.Left="273" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="1.071,0.505"/>
-        <TextBox Canvas.Left="347" TextWrapping="Wrap" Text="TextBox" Canvas.Top="11" Width="503" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" FontSize="16" />
-        <Label Content="专辑名称" Canvas.Left="24" Canvas.Top="52" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Label Content="音频数量" Canvas.Left="772" Canvas.Top="52" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Canvas.Left="838" TextWrapping="Wrap" Text="" x:Name="lblCount" Canvas.Top="52" Background="#FFD2ECE9" Height="27" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        </Grid.Resources>
+        <Label Content="专辑ID" Margin="18,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="txtAlbumId" Margin="78,10,0,0" TextWrapping="Wrap" Text="" Width="98" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Left" FontSize="16" VerticalContentAlignment="Center"/>
+        <Button x:Name="btnLoad" Content="解析" Margin="239,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" Width="40" Click="btnLoad_Click" VerticalContentAlignment="Center" />
+        <Label Content="下载目录"  HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.071,0.505" Margin="283,10,0,0" Height="27" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="txtPath" TextWrapping="Wrap" Text="" FontSize="16" IsReadOnly="True" Background="#FFF0F7DE" Margin="366,10,49,0" VerticalContentAlignment="Center" Height="27" VerticalAlignment="Top" />
+        <Label Content="专辑名称"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,45,0,0"/>
+        <Label Content="音频数量" VerticalAlignment="Top" Margin="0,45,62,0" HorizontalAlignment="Right" Width="66"/>
+        <TextBlock Canvas.Left="838" TextWrapping="Wrap" Text="" x:Name="lblCount" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" HorizontalAlignment="Right" Width="50" />
 
-        <DataGrid Canvas.Top="86" Canvas.Left="13"
-                  Name="dgSubtitle" 
+        <DataGrid 
+                  x:Name="dgSubtitle" 
                   AutoGenerateColumns="False" 
                   SelectionUnit="Cell" 
-                  HorizontalAlignment="Center" Height="453" VerticalAlignment="Top" Width="875">
+                  Margin="10,150,10,10">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="" Width="30" Binding="{Binding Base.index}" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
@@ -36,11 +36,18 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Content="全选" Canvas.Left="16" Canvas.Top="552" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button Content="取消选择" Canvas.Left="56" Canvas.Top="552" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Border BorderBrush="Black" BorderThickness="1" Height="1" Width="880" HorizontalAlignment="Center" Canvas.Left="10" VerticalAlignment="Top" Canvas.Top="46"></Border>
-        <TextBlock x:Name="lblTitle" Canvas.Left="91" TextWrapping="Wrap" Canvas.Top="52" Background="#FFD2ECE9" Width="647" Height="27" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button Content="…" Canvas.Left="857" Canvas.Top="11" HorizontalAlignment="Center" VerticalAlignment="Center" Width="34" Height="27"/>
-        <CheckBox Content="降序" Canvas.Left="169" Canvas.Top="16" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-    </Canvas>
+        <Button x:Name="btnAllSel" Content="全选" VerticalAlignment="Top" Height="27" Margin="0,87,88,0" HorizontalAlignment="Right" Width="61"/>
+        <Button x:Name="btnNonSel" Content="取消选择" VerticalAlignment="Top"  Height="27" Margin="0,87,11,0" HorizontalAlignment="Right" Width="60" />
+        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" Height="1"  VerticalAlignment="Top" Margin="10,80,10,0"/>
+        <TextBlock x:Name="lblTitle"  TextWrapping="Wrap" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="78,46,133,0"/>
+        <Button x:Name="btnPath" Content="…" Margin="0,10,10,0" VerticalAlignment="Top" Height="27" HorizontalAlignment="Right" Width="34" VerticalContentAlignment="Center"/>
+        <CheckBox Content="降序" Margin="181,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <RadioButton Content="mp3" Margin="83,87,0,0" HorizontalAlignment="Left" Width="49" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <RadioButton Content="m4a" Margin="145,87,0,0" HorizontalAlignment="Left" Width="48" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="chkFileNo" Content="文件名前添加序号" Margin="213,87,0,0" HorizontalAlignment="Left" Width="132" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <Button x:Name="btnDownload" Content="下载" Margin="10,119,10,0" Background="#FF9DEDAC" Height="26" VerticalAlignment="Top" />
+        <Label Content="文件格式"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,87,0,0" Height="27"/>
+        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="202,87,0,0" VerticalAlignment="Top" Width="1"/>
+        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="352,87,0,0" VerticalAlignment="Top" Width="1"/>
+    </Grid>
 </Window>
