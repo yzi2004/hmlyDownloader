@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace xmryDownloader
 {
@@ -27,10 +26,11 @@ namespace xmryDownloader
     {
         public int albumId { get; set; }
         public string albumTitle { get; set; }
+        public int trackId { get; set; }
+
+        public string title { get; set; }
 
         public int duration { get; set; }
-
-        public TimeSpan AudioDuration =>Utils.GetTimeDur(duration);
 
         public string playPathAacv224 { get; set; }
 
@@ -39,9 +39,5 @@ namespace xmryDownloader
         public string playUrl32 { get; set; }
 
         public string playUrl64 { get; set; }
-
-
-        public string title { get; set; }
-
     }
 }

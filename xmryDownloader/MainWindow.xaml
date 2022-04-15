@@ -5,49 +5,86 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:xmryDownloader"
         mc:Ignorable="d"
-        Title="喜马拉雅听书下载【只能下载免费书哦】" Height="625" Width="917" FontSize="14" FontFamily="Microsoft YaHei UI" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+        Title="喜马拉雅听书下载【只能下载免费书哦】" Height="625" Width="917" FontSize="14" FontFamily="Microsoft YaHei UI" 
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
+        WindowStyle="ThreeDBorderWindow">
     <Grid Background="#FFF6EA" >
         <Grid.Resources>
             <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
+            <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="#31475e" />
+            </Style>
+            <Style x:Key="CustCellStyle" TargetType="DataGridCell" >
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=Foreground}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <SolidColorBrush x:Key="CustGridLine" Color="#FFD2ECE9" />
         </Grid.Resources>
         <Label Content="专辑ID" Margin="18,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center"/>
         <TextBox x:Name="txtAlbumId" Margin="78,10,0,0" TextWrapping="Wrap" Text="" Width="98" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Left" FontSize="16" VerticalContentAlignment="Center"/>
-        <Button x:Name="btnLoad" Content="解析" Margin="239,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" Width="40" Click="btnLoad_Click" VerticalContentAlignment="Center" />
-        <Label Content="下载目录"  HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.071,0.505" Margin="283,10,0,0" Height="27" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="txtPath" TextWrapping="Wrap" Text="" FontSize="16" IsReadOnly="True" Background="#FFF0F7DE" Margin="366,10,49,0" VerticalContentAlignment="Center" Height="27" VerticalAlignment="Top" />
+        <CheckBox x:Name="chkDesc" Content="降序" Margin="181,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="文件格式"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="239,10,0,0" Height="27"/>
+        <RadioButton Content="mp3" GroupName="fileFmt" Margin="371,10,0,0" HorizontalAlignment="Left" Width="49" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <RadioButton Content="m4a" GroupName="fileFmt" Margin="310,10,0,0" HorizontalAlignment="Left" Width="48" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="chkFileNo" Content="文件名前添加序号" Margin="0,87,238,0" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="132"/>
+
+        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="235,10,0,0" VerticalAlignment="Top" Width="1"/>
+        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="432,10,0,0" VerticalAlignment="Top" Width="1"/>
+        <Button x:Name="btnLoad" Content="解析" Margin="0,10
+                ,0,0" VerticalAlignment="Top" Height="27" Click="btnLoad_Click" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="40" RenderTransformOrigin="-1.51,0.489" />
+        <Label Content="下载目录"  HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.071,0.505" Margin="5,87,0,0" Height="27" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="txtPath" TextWrapping="Wrap" Text="" FontSize="16" IsReadOnly="True" Background="#FFD2ECE9" Margin="78,87,432,0" VerticalContentAlignment="Center" Height="27" VerticalAlignment="Top" />
         <Label Content="专辑名称"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,45,0,0"/>
         <Label Content="音频数量" VerticalAlignment="Top" Margin="0,45,62,0" HorizontalAlignment="Right" Width="66"/>
-        <TextBlock Canvas.Left="838" TextWrapping="Wrap" Text="" x:Name="lblCount" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" HorizontalAlignment="Right" Width="50" />
-
         <DataGrid 
-                  x:Name="dgSubtitle" 
+                  x:Name="dgTrackList" 
                   AutoGenerateColumns="False" 
-                  SelectionUnit="Cell" 
-                  Margin="10,150,10,10">
-
+                  SelectionUnit="FullRow" 
+                  VerticalGridLinesBrush="{StaticResource CustGridLine}"
+            HorizontalGridLinesBrush="{StaticResource CustGridLine}"
+            RowHeight="30"
+            IsReadOnly="True"
+                  Margin="10,120,10,10">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center" Margin="2,0,2,0" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Foreground" Value="#31475e" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="" Width="30" Binding="{Binding Base.index}" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
-                <DataGridTextColumn Header="标题" Width="295" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                <DataGridTextColumn Header="时长" Width="65" CanUserSort="False" CanUserResize="False" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                <DataGridTextColumn Header="播放地址" Width="*" CanUserSort="False" CanUserResize="False" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                <DataGridTextColumn Header="" Width="30" Binding="{Binding No}" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
+                <DataGridTextColumn Header="标题" Binding="{Binding Title}" Width="255" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+                <DataGridTextColumn Header="播放地址" Binding="{Binding M4aUrl}" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+                <DataGridTextColumn Header="时长" Binding="{Binding Duration,StringFormat=c}" Width="65" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
 
             </DataGrid.Columns>
         </DataGrid>
-
-        <Button x:Name="btnAllSel" Content="全选" VerticalAlignment="Top" Height="27" Margin="0,87,88,0" HorizontalAlignment="Right" Width="61"/>
-        <Button x:Name="btnNonSel" Content="取消选择" VerticalAlignment="Top"  Height="27" Margin="0,87,11,0" HorizontalAlignment="Right" Width="60" />
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" Height="1"  VerticalAlignment="Top" Margin="10,80,10,0"/>
-        <TextBlock x:Name="lblTitle"  TextWrapping="Wrap" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="78,46,133,0"/>
-        <Button x:Name="btnPath" Content="…" Margin="0,10,10,0" VerticalAlignment="Top" Height="27" HorizontalAlignment="Right" Width="34" VerticalContentAlignment="Center"/>
-        <CheckBox Content="降序" Margin="181,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <RadioButton Content="mp3" Margin="83,87,0,0" HorizontalAlignment="Left" Width="49" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <RadioButton Content="m4a" Margin="145,87,0,0" HorizontalAlignment="Left" Width="48" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <CheckBox x:Name="chkFileNo" Content="文件名前添加序号" Margin="213,87,0,0" HorizontalAlignment="Left" Width="132" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Button x:Name="btnDownload" Content="下载" Margin="10,119,10,0" Background="#FF9DEDAC" Height="26" VerticalAlignment="Top" />
-        <Label Content="文件格式"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,87,0,0" Height="27"/>
-        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="202,87,0,0" VerticalAlignment="Top" Width="1"/>
-        <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="352,87,0,0" VerticalAlignment="Top" Width="1"/>
+        <Label x:Name="lblTitle" VerticalContentAlignment="Center" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="78,46,133,0"/>
+        <Label x:Name="lblCount" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" Width="44" HorizontalAlignment="Right"/>
+        <Button x:Name="btnPath" Content="…" Margin="0,87,386,0" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="34"/>
+
+        <Button x:Name="btnDownload" Content="下载音频文件到指定目录!" Margin="0,87,10,0" Background="#FF9DEDAC" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="205" Click="btnDownload_Click" />
+
     </Grid>
 </Window>

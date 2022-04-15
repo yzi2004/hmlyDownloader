@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace xmryDownloader
 {
@@ -21,25 +7,42 @@ namespace xmryDownloader
     /// </summary>
     public partial class MainWindow : Window
     {
+        private xmryDownloadService _service = new xmryDownloadService();
+
+        private TrackViewModel _viewModel;
+
+
         public MainWindow()
         {
             InitializeComponent();
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
-
 
         private async void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(txtAlbumId.Text))
+            if (string.IsNullOrWhiteSpace(txtAlbumId.Text))
             {
                 MessageBox.Show("要先输入专辑ID哦！");
                 return;
             }
+            _viewModel = await _service.GetAlbumTrackList(txtAlbumId.Text, !(chkDesc.IsChecked ?? false));
 
+            if (!string.IsNullOrWhiteSpace(_viewModel.ErrMsg))
+            {
+                MessageBox.Show(_viewModel.ErrMsg);
+                return
+                    ;
+            }
 
-            WebAccess wa = new WebAccess();
-            var data = await wa.GetAlbumTrackList(txtAlbumId.Text);
+            lblTitle.Content = _viewModel.Title;
+            lblCount.Content = _viewModel.TrackCount.ToString();
+            dgTrackList.ItemsSource = _viewModel.Data;
+        }
 
+        private void btnDownload_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "http://aod.cos.tx.xmcdn.com/group68/M0B/3C/72/wKgMeF3KmkqyCl04ACULolF_vV0371.m4a";
+
+            _service.Download(url, "c:\\temp\\aaa.m4a");
 
         }
     }

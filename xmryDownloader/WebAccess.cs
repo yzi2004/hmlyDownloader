@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -19,24 +16,45 @@ namespace xmryDownloader
             _httpClient.Timeout = new TimeSpan(0, 1, 30); //90秒
         }
 
-        public async Task<GetAlbumInfoResponse> GetAlbumTrackList(string albumID, bool ascFlg = true)
+        internal async Task<GetAlbumInfoResponse> Get(string url)
         {
-            string url = $"https://mobile.ximalaya.com/mobile/v1/album/track/ts-{Utils.GetUnixTime()}?ac=WIFI&albumId={albumID}&device=android&isAsc={ascFlg}&pageId=1&pageSize=200";
+            try
+            {
+                HttpResponseMessage resp = await _httpClient.GetAsync(url);
+                resp.EnsureSuccessStatusCode();
+                var byteData = await resp.Content.ReadAsByteArrayAsync();
 
-            return await Get(url);
+                string json = Encoding.UTF8.GetString(byteData);
+                var data = JsonSerializer.Deserialize<GetAlbumInfoResponse>(json);
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return new GetAlbumInfoResponse() { msg = $"Noops，系统出错了。{ex.Message}", ret= 99 };
+            }
         }
 
-        private async Task<GetAlbumInfoResponse> Get(string url)
+        internal async Task DownloadFile(string url, string path,Action<int> Progress)
         {
-            HttpResponseMessage resp = await _httpClient.GetAsync(url);
-            resp.EnsureSuccessStatusCode();
-            var byteData = await resp.Content.ReadAsByteArrayAsync();
+            try
+            {
+                HttpResponseMessage resp = await _httpClient.GetAsync(url);
+                resp.EnsureSuccessStatusCode();
 
-            string json = Encoding.UTF8.GetString(byteData);
-            File.AppendAllText("c:\\temp\\aaa.json", json);
-            var data = JsonSerializer.Deserialize<GetAlbumInfoResponse>(json);
+                var cnt = resp.Headers.Server;
 
-            return data;
+                //var byteData = await resp.Content.ReadAsByteArrayAsync();
+
+                //string json = Encoding.UTF8.GetString(byteData);
+                //var data = JsonSerializer.Deserialize<GetAlbumInfoResponse>(json);
+
+                return ;
+            }
+            catch (Exception ex)
+            {
+                return ;
+            }
         }
     }
 }
