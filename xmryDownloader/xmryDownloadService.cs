@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace xmryDownloader
 {
@@ -36,26 +38,6 @@ namespace xmryDownloader
                 Duration = Utils.GetTimeDur(item.duration)
             }));
 
-            tracks.data.list.ForEach(item => vm.Data.Add(new TrackItem()
-            {
-                No = No++,
-                Id = item.trackId,
-                Title = item.title,
-                M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
-                Mp3Url = string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64,
-                Duration = Utils.GetTimeDur(item.duration)
-            }));
-
-            tracks.data.list.ForEach(item => vm.Data.Add(new TrackItem()
-            {
-                No = No++,
-                Id = item.trackId,
-                Title = item.title,
-                M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
-                Mp3Url = string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64,
-                Duration = Utils.GetTimeDur(item.duration)
-            }));
-
             while (tracks.data.maxPageId > tracks.data.pageId)
             {
                 tracks = await GetAlbumTrackList(albumID, ascFlg, ++tracks.data.pageId);
@@ -83,9 +65,22 @@ namespace xmryDownloader
             return await wa.Get(url);
         }
 
-        public async Task Download(string url, string fileName)
+        public async Task Download(string url, string fileName, Action<long, long, bool> ReportProgess)
         {
-            wa.DownloadFile(url, fileName, (par) => { }).Wait();
+            if (File.Exists(fileName))
+            {
+                FileInfo fs  = new FileInfo(fileName);
+
+                var contentsLen = await wa.GetContentsSize(url);
+
+                if(contentsLen >0 && contentsLen  == fs.Length)
+                {
+                    return;
+                }
+                File.Delete(fileName);
+            }
+
+            await wa.DownloadFile(url, fileName, ReportProgess);
         }
     }
 }

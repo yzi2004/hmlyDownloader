@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="喜马拉雅听书下载【只能下载免费书哦】" Height="625" Width="917" 
+             x:Class="xmryDownlaoderMAUI.MainPage">
+
+    <Grid Background="#FFF6EA" >
+        <!--<Grid.Resources>
+            <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Foreground" Value="#31475e" />
+            </Style>
+            <Style x:Key="CustCellStyle" TargetType="DataGridCell" >
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Foreground" Value="White" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <SolidColorBrush x:Key="CustGridLine" Color="#FFD2ECE9" />
+        </Grid.Resources>-->
+        <Label Text="专辑ID" Margin="18,10,0,0" HorizontalOptions="Start" VerticalOptions="Start" LineHeight="27" />
+        <Entry x:Name="txtAlbumId" Margin="78,10,0,0"  Text="" HorizontalOptions="Start" VerticalOptions="Start"  FontSize="16" />
+        <!--<CheckBox x:Name="chkDesc"  Margin="181,10,0,0" HorizontalOptions="Start" VerticalOptions="Start" />
+        <Label Text="文件格式"  HorizontalOptions="Start" VerticalOptions="Start" Margin="239,10,0,0" LineHeight="27"/>
+        <RadioButton  GroupName="fileFmt" Margin="371,10,0,0" HorizontalOptions="Start" Width="49"  VerticalOptions="Start" />
+        <RadioButton  GroupName="fileFmt" Margin="310,10,0,0" HorizontalOptions="Start" Width="48"  VerticalOptions="Start" />
+        <CheckBox x:Name="chkFileNo"  Margin="0,87,238,0" Height="27" VerticalOptions="Start"  HorizontalOptions="End" Width="132"/>
+
+        <Border BackgroundColor="#FF9E8A8A"  HorizontalOptions="Start" Height="28" Margin="235,10,0,0" VerticalOptions="Start" Width="1"/>
+        <Border BackgroundColor="#FF9E8A8A"  HorizontalOptions="Start" Height="28" Margin="432,10,0,0" VerticalOptions="Start" Width="1"/>
+        <Button x:Name="btnLoad" Text="解析" Margin="0,10
+                ,0,0" VerticalOptions="Start" Height="27" Clicked="btnLoad_Click" HorizontalOptions="Center" Width="40" />
+        <Label Text="下载目录"  HorizontalOptions="Start" VerticalOptions="Start"  Margin="5,87,0,0" Height="27" />
+        <Entry x:Name="txtPath"  Text="" FontSize="16" IsReadOnly="True" Background="#FFD2ECE9" Margin="78,87,432,0"  Height="27" VerticalOptions="Start" />
+        <Label Text="专辑名称"  HorizontalOptions="Start" VerticalOptions="Start" Margin="5,45,0,0"/>
+        <Label Text="音频数量" VerticalOptions="Start" Margin="0,45,62,0" HorizontalOptions="End" Width="66"/>-->
+        <!--<DataGrid 
+                  x:Name="dgTrackList" 
+                  AutoGenerateColumns="False" 
+                  SelectionUnit="FullRow" 
+                  VerticalGridLinesBrush="{StaticResource CustGridLine}"
+            HorizontalGridLinesBrush="{StaticResource CustGridLine}"
+            RowHeight="30"
+            IsReadOnly="True"
+                  Margin="10,120,10,35">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalOptions="Center" Margin="2,0,2,0" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Foreground" Value="#31475e" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="" Width="30" Binding="{Binding No}" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
+                <DataGridTextColumn Header="标题" Binding="{Binding Title}" Width="255" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+                <DataGridTextColumn Header="播放地址" Binding="{Binding M4aUrl}" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+                <DataGridTextColumn Header="时长" Binding="{Binding Duration,StringFormat=c}" Width="65" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+
+            </DataGrid.Columns>
+        </DataGrid>-->
+        <!--<Border Background="#FF9E8A8A"  Height="1"  VerticalOptions="Start" Margin="10,80,10,0"/>
+        <Label x:Name="lblTitle" Background="#FFD2ECE9" Height="27" VerticalOptions="Start" Margin="78,46,133,0"/>
+        <Label x:Name="lblCount"  Background="#FFD2ECE9" Height="27" VerticalOptions="Start" Margin="0,46,10,0" Width="44" HorizontalOptions="End"/>
+        <Button x:Name="btnPath" Text="…" Margin="0,87,386,0" VerticalOptions="Start" Height="27" HorizontalOptions="End" Width="34"/>
+
+        <Button x:Name="btnDownload" Text="下载音频文件到指定目录!" Margin="0,87,10,0" Background="#FF9DEDAC" Height="27" VerticalOptions="Start" HorizontalOptions="End" Width="205" Clicked="btnDownload_Click" />
+        <ProgressBar x:Name="pbDownload" Margin="10,0,10,10" Height="20" VerticalOptions="End"/>-->
+
+    </Grid>
+</ContentPage>

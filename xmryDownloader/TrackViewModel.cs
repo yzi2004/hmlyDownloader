@@ -27,5 +27,6 @@ namespace xmryDownloader
         public string Mp3Url { get; set; }
 
         public string M4aUrl { get; set; }
+
     }
 }
