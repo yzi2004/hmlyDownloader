@@ -1,36 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace xmryDownloader
+namespace hmlyDownloader
 {
-    internal class xmryDownloadService
+    internal interface IDownloadService
+    {
+        public Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool ascFlg = true);
+        public Task Download(string url, string fileName, Action<long, long, bool> ReportProgess);
+    }
+
+    internal class DownloadService : IDownloadService
     {
         WebAccess wa = new WebAccess();
 
-        public async Task<TrackViewModel> GetAlbumTrackList(string albumID, bool ascFlg = true)
+        public async Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool ascFlg = true)
         {
-            TrackViewModel vm = new TrackViewModel();
+            List<TrackItem> data = new List<TrackItem>();
             var tracks = await GetAlbumTrackList(albumID, ascFlg, 1);
 
             if (tracks == null || tracks.ret != 0)
             {
-                vm.ErrMsg = string.IsNullOrWhiteSpace(tracks?.msg) ? "Noops,系统出错了。" : tracks.msg;
-                return vm;
+                throw new Exception(string.IsNullOrWhiteSpace(tracks?.msg) ? "Noops,系统出错了。" : tracks.msg);
             }
             if ((tracks.data?.totalCount ?? 0) <= 0)
             {
-                vm.ErrMsg = "Oh,Nooo, 为啥找不到音频文件呢。";
-                return vm;
+                throw new Exception("Oh,Nooo, 为啥找不到音频文件呢。");
             }
 
             int No = 1;
 
-            vm.Title = tracks.data.list[0].albumTitle;
-            vm.TrackCount = tracks.data.totalCount;
-            tracks.data.list.ForEach(item => vm.Data.Add(new TrackItem()
+            tracks.data.list.ForEach(item => data.Add(new TrackItem()
             {
                 No = No++,
+                AlbumTitle = item.albumTitle,
                 Id = item.trackId,
                 Title = item.title,
                 M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
@@ -44,19 +48,20 @@ namespace xmryDownloader
 
                 if ((tracks?.data?.totalCount ?? 0) > 0)
                 {
-                    tracks.data.list.ForEach(item => vm.Data.Add(new TrackItem()
+                    tracks.data.list.ForEach(item => data.Add(new TrackItem()
                     {
                         No = No++,
+                        AlbumTitle = item.albumTitle,
                         Id = item.trackId,
                         Title = item.title,
                         M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
                         Mp3Url = string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64,
                         Duration = Utils.GetTimeDur(item.duration)
-                    })); ;
+                    }));
                 }
             }
 
-            return vm;
+            return data;
         }
 
         private async Task<GetAlbumInfoResponse> GetAlbumTrackList(string albumID, bool ascFlg, int pageId)
@@ -69,11 +74,11 @@ namespace xmryDownloader
         {
             if (File.Exists(fileName))
             {
-                FileInfo fs  = new FileInfo(fileName);
+                FileInfo fs = new FileInfo(fileName);
 
                 var contentsLen = await wa.GetContentsSize(url);
 
-                if(contentsLen >0 && contentsLen  == fs.Length)
+                if (contentsLen > 0 && contentsLen == fs.Length)
                 {
                     return;
                 }

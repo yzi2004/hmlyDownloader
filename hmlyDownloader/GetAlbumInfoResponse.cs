@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace xmryDownloader
+namespace hmlyDownloader
 {
     public class GetAlbumInfoResponse
     {

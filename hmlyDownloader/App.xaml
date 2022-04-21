@@ -1,7 +1,7 @@
-﻿<Application x:Class="xmryDownloader.App"
+﻿<Application x:Class="hmlyDownloader.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:xmryDownloader"
+             xmlns:local="clr-namespace:hmlyDownloader"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

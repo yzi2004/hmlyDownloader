@@ -1,13 +1,17 @@
-﻿<Window x:Class="xmryDownloader.MainWindow"
+﻿<Window x:Class="hmlyDownloader.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:xmryDownloader"
+        xmlns:local="clr-namespace:hmlyDownloader"
         mc:Ignorable="d"
         Title="喜马拉雅有声文件下载工具【只能下载免费书哦】" Height="625" Width="917" FontSize="14" FontFamily="Microsoft YaHei UI" 
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
+        d:DataContext="{d:DesignInstance Type={x:Type local:MainWindowViewModel}}"
         WindowStyle="ThreeDBorderWindow">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
     <Grid Background="#FFF6EA" >
         <Grid.Resources>
             <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
@@ -26,30 +30,35 @@
             </Style>
             <SolidColorBrush x:Key="CustGridLine" Color="#FFD2ECE9" />
         </Grid.Resources>
-        <Label Content="专辑ID" Margin="255,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="txtAlbumId" Margin="315,10,0,0" TextWrapping="Wrap" Text="" Width="98" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Left" FontSize="16" VerticalContentAlignment="Center"/>
-        <CheckBox x:Name="chkDesc" Content="降序" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="专辑ID" Margin="255,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" />
+        <TextBox x:Name="txtAlbumId" Margin="315,10,0,0" TextWrapping="Wrap" Text="{Binding AlbumID}" Width="98" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Left" FontSize="16" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="chkDesc" Content="降序" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsDesc}" />
         <Label Content="文件格式"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="517,10,0,0" Height="27"/>
-        <RadioButton x:Name="radMp3" Content="mp3" GroupName="fileFmt" Margin="594,10,0,0" HorizontalAlignment="Left" Width="49" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" Checked="radMp3_Checked"/>
-        <RadioButton x:Name="radM4a" Content="m4a" GroupName="fileFmt" Margin="658,10,0,0" HorizontalAlignment="Left" Width="48" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" Checked="radM4a_Checked"/>
-        <CheckBox x:Name="chkFileNo" Content="文件名前添加序号" Margin="0,87,238,0" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="132"/>
+        <RadioButton x:Name="radMp3" Content="mp3" GroupName="fileFmt" Margin="594,10,0,0" HorizontalAlignment="Left" Width="49" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="{Binding UseMp3Fmt}"/>
+        <RadioButton x:Name="radM4a" Content="m4a" GroupName="fileFmt" Margin="658,10,0,0" HorizontalAlignment="Left" Width="48" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" IsChecked="{Binding UseM4aFmt}"/>
+        <CheckBox x:Name="chkFileNo" Content="文件名前添加序号" Margin="0,87,238,0" Height="27" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="132" IsChecked="{Binding AddFileNo}"/>
 
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="32" Margin="245,10,0,0" VerticalAlignment="Top" Width="1"/>
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" HorizontalAlignment="Left" Height="28" Margin="500,10,0,0" VerticalAlignment="Top" Width="1"/>
-        <Button x:Name="btnLoad" Content="解析" Margin="0,10,12,0" VerticalAlignment="Top" Height="27" Click="btnLoad_Click" VerticalContentAlignment="Center" RenderTransformOrigin="-1.51,0.489" HorizontalAlignment="Right" Width="116" Background="#FF75D9F4" />
+        <Button x:Name="btnLoad" Content="解析" Margin="0,10,10,0" VerticalAlignment="Top" Height="27" Command="{Binding DoLoad}" VerticalContentAlignment="Center" RenderTransformOrigin="-1.51,0.489" HorizontalAlignment="Right" Width="116" Background="#FF75D9F4" />
         <Label Content="下载目录"  HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.071,0.505" Margin="5,87,0,0" Height="27" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="txtPath" TextWrapping="Wrap" Text="" FontSize="16" IsReadOnly="True" Background="#FFD2ECE9" Margin="78,87,432,0" VerticalContentAlignment="Center" Height="27" VerticalAlignment="Top" />
+        <TextBox x:Name="txtPath" TextWrapping="Wrap" Text="{Binding Path}" FontSize="16" IsReadOnly="True" Background="#FFD2ECE9" Margin="78,87,432,0" VerticalContentAlignment="Center" Height="27" VerticalAlignment="Top" />
         <Label Content="专辑名称"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,45,0,0"/>
         <Label Content="音频数量" VerticalAlignment="Top" Margin="0,45,62,0" HorizontalAlignment="Right" Width="66"/>
         <DataGrid 
-                  x:Name="dgTrackList" 
-                  AutoGenerateColumns="False" 
-                  SelectionUnit="FullRow" 
-                  VerticalGridLinesBrush="{StaticResource CustGridLine}"
+            x:Name="dgTrackList" 
+            AutoGenerateColumns="False" 
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+            SelectionUnit="FullRow" 
+            VerticalGridLinesBrush="{StaticResource CustGridLine}"
             HorizontalGridLinesBrush="{StaticResource CustGridLine}"
             RowHeight="30"
+            ItemsSource="{Binding Path=Data, NotifyOnSourceUpdated=True}"
             IsReadOnly="True"
-                  Margin="10,120,10,35">
+            Margin="10,120,10,42">
             <DataGrid.Resources>
                 <Style TargetType="DataGridCell">
                     <Setter Property="Template">
@@ -80,12 +89,13 @@
             </DataGrid.Columns>
         </DataGrid>
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" Height="1"  VerticalAlignment="Top" Margin="10,80,10,0"/>
-        <TextBox x:Name="txtTitle" VerticalContentAlignment="Center" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" IsReadOnly="True" Margin="78,46,133,0"/>
-        <TextBox x:Name="txtCount" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" Width="44" HorizontalAlignment="Right" IsReadOnly="True" />
-        <Button x:Name="btnPath" Content="…" Margin="0,87,386,0" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="34" Click="btnPath_Click"/>
+        <TextBox x:Name="txtTitle" VerticalContentAlignment="Center" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" IsReadOnly="True" Margin="78,46,133,0" Text="{Binding Title}" />
+        <TextBox x:Name="txtCount" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" Width="44" HorizontalAlignment="Right" IsReadOnly="True" Text="{Binding TrackCount}" />
+        <Button x:Name="btnPath" Content="…" Margin="0,87,386,0" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="34" Command="{Binding SelPath}"/>
 
-        <Button x:Name="btnDownload" Content="下载音频文件到指定目录!" Margin="0,87,10,0" Background="#FF9DEDAC" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="205" Click="btnDownload_Click" />
-        <ProgressBar x:Name="pbDownload" Margin="10,0,10,10" Height="20" VerticalAlignment="Bottom"/>
+        <Button x:Name="btnDownload" Content="下载音频文件到指定目录!" Margin="0,87,10,0" Background="#FF9DEDAC" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="205" Command="{Binding DoDownload}" />
+        <ProgressBar x:Name="pbTotal" Margin="10,0,10,26" Height="12" VerticalAlignment="Bottom"/>
+        <ProgressBar x:Name="pbDownload" Margin="10,0,10,10" Height="12" VerticalAlignment="Bottom"/>
         <Label Content="喜马拉雅有声文件下载工具" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
