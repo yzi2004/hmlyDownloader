@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Input;
@@ -35,7 +36,7 @@ namespace hmlyDownloader
             set => SetProperty(ref _descFlg, value);
         }
 
-        private bool _mp3Flg;
+        private bool _mp3Flg = true;
 
         public bool UseMp3Fmt
         {
@@ -43,12 +44,10 @@ namespace hmlyDownloader
             set => SetProperty(ref _mp3Flg, value);
         }
 
-        private bool _m4aFlg;
-
         public bool UseM4aFmt
         {
-            get => _m4aFlg;
-            set => SetProperty(ref _m4aFlg, value);
+            get => !_mp3Flg;
+            set => SetProperty(ref _mp3Flg, !value);
         }
 
         private bool _addFileNo;
@@ -59,11 +58,11 @@ namespace hmlyDownloader
             set => SetProperty(ref _addFileNo, value);
         }
 
-        private string _title;
-        public string Title
+        private string _albumTitle;
+        public string AlbumTitle
         {
-            get => _title;
-            set => SetProperty(ref _title, value);
+            get => _albumTitle;
+            set => SetProperty(ref _albumTitle, value);
         }
 
         private int? _trackCnt;
@@ -81,7 +80,20 @@ namespace hmlyDownloader
             set => SetProperty(ref _path, value);
         }
 
-        public string ErrMsg { get; set; }
+        private double _downloadProgress;
+
+        public double DownloadProgress
+        {
+            get => _downloadProgress;
+            set => SetProperty(ref _downloadProgress, value);
+        }
+
+        private double _totalProgess;
+        public double TotalProgress
+        {
+            get => _totalProgess;
+            set => SetProperty(ref _totalProgess, value);
+        }
 
 
         public ICommand DoLoad => new AsyncRelayCommand(async () =>
@@ -97,7 +109,11 @@ namespace hmlyDownloader
             }
             try
             {
-                Data = await _service.GetAlbumTrackList(AlbumID, !IsDesc);
+                var trackList = await _service.GetAlbumTrackList(AlbumID, UseMp3Fmt, !IsDesc);
+
+                Data = new ObservableCollection<TrackItem>(trackList);
+
+                OnPropertyChanged(nameof(Data));
             }
             catch (Exception ex)
             {
@@ -111,33 +127,32 @@ namespace hmlyDownloader
 
             if (Data.Count > 0)
             {
-                Title = Data[0].AlbumTitle;
+                AlbumTitle = Data[0].AlbumTitle;
                 TrackCount = Data.Count;
-                UseMp3Fmt = true;
-                AddFileNo = true;
             }
         });
 
-        public ICommand DoDownload => new RelayCommand(() =>
+        public ICommand DoDownload => new AsyncRelayCommand(async () =>
         {
-            int idx = 0;
-            Data.ForEach(async item =>
-                 {
-                     string url = UseMp3Fmt ? item.Mp3Url : item.M4aUrl;
+            for (int idx = 0; idx < Data.Count; idx++)
+            {
+                var item = Data[idx];
 
-                     string destFile = $"{_path}\\{((_addFileNo) ? idx.ToString() + "." : "")}{Regex.Replace(item.Title, "[\\\\/<>\":*|?]", "")}.{(_mp3Flg ? "mp3" : "m4a")}";
+                //string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{((AddFileNo) ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
 
-                     await _service.Download(url, destFile, (totalSize, totalRead, IsCompleted) =>
-                     {
-                         if (totalSize > 0)
-                         {
-                             //pbDownload.Value = totalRead * 100.0 / totalSize;
-                             //pbTotal.Value = idx * 100.0 / _viewModel.Data.Count;
-                         }
-                     });
-                     Thread.Sleep(1000);
-                     idx++;
-                 });
+                ////await _service.Download(item.DownloadUrl, destFile, (totalSize, totalRead, IsCompleted) =>
+                ////{
+                ////    if (totalSize > 0)
+                ////    {
+                ////        DownloadProgress = totalRead * 100.0 / totalSize;
+                ////    }
+                ////});
+
+                //TotalProgress = (idx + 1) * 100.0 / Data.Count;
+                item.DownloadUrl += "[OK]"; 
+                //OnPropertyChanged(nameof(Data));
+                Thread.Sleep(1000);
+            }
         });
 
         public ICommand SelPath => new RelayCommand(() =>
@@ -148,12 +163,9 @@ namespace hmlyDownloader
 
             Path = dlg.result;
 
-            //Messenger.Send(new )
-
-
         });
 
-        public List<TrackItem> Data { get; set; } = new List<TrackItem>();
+        public ObservableCollection<TrackItem> Data { get; set; }
     }
 
     internal class TrackItem
@@ -163,13 +175,12 @@ namespace hmlyDownloader
 
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string TrackTitle { get; set; }
 
         public TimeSpan Duration { get; set; }
 
-        public string Mp3Url { get; set; }
+        public string DownloadUrl { get; set; }
 
-        public string M4aUrl { get; set; }
-
+        public bool Downloaded { get; set; }
     }
 }

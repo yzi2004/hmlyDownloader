@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace hmlyDownloader
@@ -45,5 +47,21 @@ namespace hmlyDownloader
             return new TimeSpan(hour, minute, second);
         }
 
+        public static string EnsureFolder(string basePath, string albumTitle)
+        {
+            string titleFolder = Regex.Replace(albumTitle, "[\\\\/<>\":*|?]", "");
+            string path = $"{basePath}\\{titleFolder}";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+
+        public static string EnsureFileName(string trackTitle)
+        {
+            return Regex.Replace(trackTitle, "[\\\\/<>\":*|?]", "");
+        }
     }
 }

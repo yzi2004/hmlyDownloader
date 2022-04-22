@@ -56,7 +56,7 @@
             VerticalGridLinesBrush="{StaticResource CustGridLine}"
             HorizontalGridLinesBrush="{StaticResource CustGridLine}"
             RowHeight="30"
-            ItemsSource="{Binding Path=Data, NotifyOnSourceUpdated=True}"
+            ItemsSource="{Binding Path=Data, Mode=OneWay}"
             IsReadOnly="True"
             Margin="10,120,10,42">
             <DataGrid.Resources>
@@ -76,26 +76,27 @@
                                  Value="True">
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
+                        <DataTrigger Binding="{Binding Downloaded, UpdateSourceTrigger=PropertyChanged}"  Value="True">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="" Width="30" Binding="{Binding No}" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" />
-                <DataGridTextColumn Header="标题" Binding="{Binding Title}" Width="255" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
-                <DataGridTextColumn Header="播放地址[m4a]" Binding="{Binding M4aUrl}" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
-                <DataGridTextColumn Header="播放地址[mp3]" Binding="{Binding Mp3Url}" Visibility="Hidden" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
+                <DataGridTextColumn Header="标题" Binding="{Binding TrackTitle}" Width="255" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
                 <DataGridTextColumn Header="时长" Binding="{Binding Duration,StringFormat=c}" Width="65" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
-
+                <DataGridTextColumn Header="播放地址" Binding="{Binding DownloadUrl}" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True" FontSize="9" HeaderStyle="{StaticResource CenterGridHeaderStyle}"  />
             </DataGrid.Columns>
         </DataGrid>
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" Height="1"  VerticalAlignment="Top" Margin="10,80,10,0"/>
-        <TextBox x:Name="txtTitle" VerticalContentAlignment="Center" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" IsReadOnly="True" Margin="78,46,133,0" Text="{Binding Title}" />
+        <TextBox x:Name="txtTitle" VerticalContentAlignment="Center" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" IsReadOnly="True" Margin="78,46,133,0" Text="{Binding AlbumTitle}" />
         <TextBox x:Name="txtCount" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Background="#FFD2ECE9" Height="27" VerticalAlignment="Top" Margin="0,46,10,0" Width="44" HorizontalAlignment="Right" IsReadOnly="True" Text="{Binding TrackCount}" />
         <Button x:Name="btnPath" Content="…" Margin="0,87,386,0" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="34" Command="{Binding SelPath}"/>
 
         <Button x:Name="btnDownload" Content="下载音频文件到指定目录!" Margin="0,87,10,0" Background="#FF9DEDAC" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="205" Command="{Binding DoDownload}" />
-        <ProgressBar x:Name="pbTotal" Margin="10,0,10,26" Height="12" VerticalAlignment="Bottom"/>
-        <ProgressBar x:Name="pbDownload" Margin="10,0,10,10" Height="12" VerticalAlignment="Bottom"/>
+        <ProgressBar x:Name="pbTotal" Margin="10,0,10,26" Height="12" VerticalAlignment="Bottom" Value="{Binding TotalProgress}" />
+        <ProgressBar x:Name="pbDownload" Margin="10,0,10,10" Height="12" VerticalAlignment="Bottom" Value="{Binding DownloadProgress}" />
         <Label Content="喜马拉雅有声文件下载工具" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18">
             <Label.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

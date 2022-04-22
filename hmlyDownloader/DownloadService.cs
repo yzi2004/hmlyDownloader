@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace hmlyDownloader
 {
     internal interface IDownloadService
     {
-        public Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool ascFlg = true);
+        public Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool UseMp3Fmt = true, bool ascFlg = true);
         public Task Download(string url, string fileName, Action<long, long, bool> ReportProgess);
     }
 
@@ -15,9 +16,9 @@ namespace hmlyDownloader
     {
         WebAccess wa = new WebAccess();
 
-        public async Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool ascFlg = true)
+        public async Task<List<TrackItem>> GetAlbumTrackList(string albumID, bool UseMp3Fmt = true, bool ascFlg = true)
         {
-            List<TrackItem> data = new List<TrackItem>();
+            var data = new List<TrackItem>();
             var tracks = await GetAlbumTrackList(albumID, ascFlg, 1);
 
             if (tracks == null || tracks.ret != 0)
@@ -36,9 +37,9 @@ namespace hmlyDownloader
                 No = No++,
                 AlbumTitle = item.albumTitle,
                 Id = item.trackId,
-                Title = item.title,
-                M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
-                Mp3Url = string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64,
+                TrackTitle = item.title,
+                DownloadUrl = UseMp3Fmt ? (string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64) :
+                        string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
                 Duration = Utils.GetTimeDur(item.duration)
             }));
 
@@ -53,9 +54,9 @@ namespace hmlyDownloader
                         No = No++,
                         AlbumTitle = item.albumTitle,
                         Id = item.trackId,
-                        Title = item.title,
-                        M4aUrl = string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
-                        Mp3Url = string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64,
+                        TrackTitle = item.title,
+                        DownloadUrl = UseMp3Fmt ? (string.IsNullOrWhiteSpace(item.playUrl64) ? item.playUrl32 ?? "" : item.playUrl64) :
+                        string.IsNullOrWhiteSpace(item.playPathAacv224) ? item.playPathAacv164 ?? "" : item.playPathAacv224,
                         Duration = Utils.GetTimeDur(item.duration)
                     }));
                 }
