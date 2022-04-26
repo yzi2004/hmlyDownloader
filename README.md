@@ -5,4 +5,5 @@
 欢迎对微软的Mvmm有兴趣的同学一起探讨。
 
 运行起来，大概是这个样子
+
 ![snapshot](./snapshot.jpg)
