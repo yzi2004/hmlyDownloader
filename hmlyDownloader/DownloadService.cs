@@ -67,7 +67,7 @@ namespace hmlyDownloader
 
         private async Task<GetAlbumInfoResponse> GetAlbumTrackList(string albumID, bool ascFlg, int pageId)
         {
-            string url = $"https://mobile.ximalaya.com/mobile/v1/album/track/ts-{Utils.GetUnixTime()}?ac=WIFI&albumId={albumID}&device=android&isAsc={ascFlg}&pageId=1&pageSize=200";
+            string url = $"https://mobile.ximalaya.com/mobile/v1/album/track/ts-{Utils.GetUnixTime()}?ac=WIFI&albumId={albumID}&device=android&isAsc={ascFlg}&pageId={pageId}&pageSize=200";
             return await wa.Get(url);
         }
 

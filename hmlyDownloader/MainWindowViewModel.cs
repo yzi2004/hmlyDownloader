@@ -50,7 +50,7 @@ namespace hmlyDownloader
             set => SetProperty(ref _mp3Flg, !value);
         }
 
-        private bool _addFileNo;
+        private bool _addFileNo = true;
 
         public bool AddFileNo
         {
@@ -71,6 +71,13 @@ namespace hmlyDownloader
         {
             get => _trackCnt;
             set => SetProperty(ref _trackCnt, value);
+        }
+
+        private int _selectedIndex;
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set => SetProperty(ref _selectedIndex, value);
         }
 
         private string _path;
@@ -95,14 +102,16 @@ namespace hmlyDownloader
             set => SetProperty(ref _totalProgess, value);
         }
 
+        private bool IsDownloading = false;
+        private int pauseIndex = 0;
 
         public ICommand DoLoad => new AsyncRelayCommand(async () =>
         {
             if (string.IsNullOrWhiteSpace(AlbumID))
             {
-                WeakReferenceMessenger.Default.Send(new DialogModel()
+                WeakReferenceMessenger.Default.Send<CustomMessenger>(new()
                 {
-                    action = DialogModel.ACTION.showmsg,
+                    action = CustomMessenger.ACTION.showmsg,
                     message = "要先输入专辑ID哦！"
                 });
                 return;
@@ -112,14 +121,14 @@ namespace hmlyDownloader
                 var trackList = await _service.GetAlbumTrackList(AlbumID, UseMp3Fmt, !IsDesc);
 
                 Data = new ObservableCollection<TrackItem>(trackList);
-
+                pauseIndex = 0;
                 OnPropertyChanged(nameof(Data));
             }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new DialogModel()
+                WeakReferenceMessenger.Default.Send<CustomMessenger>(new()
                 {
-                    action = DialogModel.ACTION.showmsg,
+                    action = CustomMessenger.ACTION.showmsg,
                     message = ex.Message
                 });
                 return;
@@ -134,35 +143,73 @@ namespace hmlyDownloader
 
         public ICommand DoDownload => new AsyncRelayCommand(async () =>
         {
-            for (int idx = 0; idx < Data.Count; idx++)
+            if (string.IsNullOrWhiteSpace(Path))
+            {
+                var dlg = new CustomMessenger() { action = CustomMessenger.ACTION.selfolder };
+                WeakReferenceMessenger.Default.Send(dlg);
+                Path = dlg.result;
+            }
+
+            WeakReferenceMessenger.Default.Send<CustomMessenger>(new() { action = CustomMessenger.ACTION.setfocus, message = "datagrid" });
+            IsDownloading = true;
+            for (int idx = pauseIndex; idx < Data.Count; idx++)
             {
                 var item = Data[idx];
 
-                //string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{((AddFileNo) ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
+                string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{((AddFileNo) ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
 
-                ////await _service.Download(item.DownloadUrl, destFile, (totalSize, totalRead, IsCompleted) =>
-                ////{
-                ////    if (totalSize > 0)
-                ////    {
-                ////        DownloadProgress = totalRead * 100.0 / totalSize;
-                ////    }
-                ////});
+                await _service.Download(item.DownloadUrl, destFile, (totalSize, totalRead, IsCompleted) =>
+                {
+                    if (totalSize > 0)
+                    {
+                        DownloadProgress = totalRead * 100.0 / totalSize;
+                    }
+                });
 
-                //TotalProgress = (idx + 1) * 100.0 / Data.Count;
-                item.DownloadUrl += "[OK]"; 
-                //OnPropertyChanged(nameof(Data));
+                if (!IsDownloading)
+                {
+                    pauseIndex = idx;
+                    break;
+                }
+
+                item.Downloaded = true;
+                TotalProgress = (idx + 1) * 100.0 / Data.Count;
+                SelectedIndex = idx;
                 Thread.Sleep(1000);
+                WeakReferenceMessenger.Default.Send<CustomMessenger>(new() { action = CustomMessenger.ACTION.scrollview });
+
+            }
+
+            if (pauseIndex == Data.Count - 1)
+            {
+                WeakReferenceMessenger.Default.Send<CustomMessenger>(new()
+                {
+                    action = CustomMessenger.ACTION.showmsg,
+                    message = "下载完喽。Oh，Yeah！"
+                });
             }
         });
 
         public ICommand SelPath => new RelayCommand(() =>
         {
-            var dlg = new DialogModel() { action = DialogModel.ACTION.selfolder };
+            var dlg = new CustomMessenger() { action = CustomMessenger.ACTION.selfolder };
 
             WeakReferenceMessenger.Default.Send(dlg);
 
             Path = dlg.result;
 
+        });
+
+        public ICommand DownloadPause => new RelayCommand(() =>
+        {
+            if (IsDownloading)
+            {
+                IsDownloading = false;
+            }
+            else
+            {
+                DoDownload.Execute(null);
+            }
         });
 
         public ObservableCollection<TrackItem> Data { get; set; }

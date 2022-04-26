@@ -1,11 +1,13 @@
 ﻿namespace hmlyDownloader
 {
-    public class DialogModel
+    public class CustomMessenger
     {
         public enum ACTION
         {
             showmsg,
-            selfolder
+            selfolder,
+            setfocus,
+            scrollview
         };
 
         public ACTION action { get; set; }

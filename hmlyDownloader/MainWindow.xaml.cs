@@ -18,7 +18,7 @@ namespace hmlyDownloader
         public MainWindow()
         {
             InitializeComponent();
-            WeakReferenceMessenger.Default.Register<DialogModel>(this, Receive);
+            WeakReferenceMessenger.Default.Register<CustomMessenger>(this, Receive);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -27,13 +27,13 @@ namespace hmlyDownloader
             base.OnClosing(e);
         }
 
-        public void Receive(object rec, DialogModel message)
+        public void Receive(object rec, CustomMessenger message)
         {
-            if (message.action == DialogModel.ACTION.showmsg)
+            if (message.action == CustomMessenger.ACTION.showmsg)
             {
                 MessageBox.Show(message.message);
             }
-            if (message.action == DialogModel.ACTION.selfolder)
+            if (message.action == CustomMessenger.ACTION.selfolder)
             {
                 var dlg = new WinForm.FolderBrowserDialog();
 
@@ -41,6 +41,17 @@ namespace hmlyDownloader
                 {
                     message.result = dlg.SelectedPath;
                 }
+            }
+            if (message.action == CustomMessenger.ACTION.setfocus)
+            {
+                if (message.message == "datagrid")
+                {
+                    this.dgTrackList.Focus();
+                }
+            }
+            if (message.action == CustomMessenger.ACTION.scrollview)
+            {
+                this.dgTrackList.ScrollIntoView(dgTrackList.SelectedItem);
             }
         }
     }
