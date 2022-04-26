@@ -1,4 +1,4 @@
-# hmlyDownloader
+# 喜马拉雅有声文件下载工具
 
 自己学习Microsoft.Toolkit.Mvvm的练习之作。
 
