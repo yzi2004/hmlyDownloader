@@ -156,8 +156,8 @@ namespace hmlyDownloader
             {
                 var item = Data[idx];
 
-                string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{((AddFileNo) ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
-
+                string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{(AddFileNo ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
+                item.Status = "downloading";
                 await _service.Download(item.DownloadUrl, destFile, (totalSize, totalRead, IsCompleted) =>
                 {
                     if (totalSize > 0)
@@ -172,10 +172,11 @@ namespace hmlyDownloader
                     break;
                 }
 
-                item.Downloaded = true;
                 TotalProgress = (idx + 1) * 100.0 / Data.Count;
                 SelectedIndex = idx;
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
+
+                item.Status = "done";
                 WeakReferenceMessenger.Default.Send<CustomMessenger>(new() { action = CustomMessenger.ACTION.scrollview });
 
             }
@@ -228,6 +229,6 @@ namespace hmlyDownloader
 
         public string DownloadUrl { get; set; }
 
-        public bool Downloaded { get; set; }
+        public string Status { get; set; }
     }
 }

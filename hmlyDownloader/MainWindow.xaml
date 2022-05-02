@@ -15,6 +15,17 @@
     <Grid Background="#FFF6EA" >
         <Grid.Resources>
             <SolidColorBrush x:Key="CustGridLine" Color="#FFD2ECE9" />
+            <Viewbox x:Key="i_done" x:Shared="False">
+                <Canvas Width="24" Height="24">
+                    <Path Data="M10,17L6.5,13.5L7.91,12.08L10,14.17L15.18,9L16.59,10.41M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z" Fill="#FF1FBB09"  />
+                </Canvas>
+            </Viewbox>
+            <Viewbox x:Key="i_downloading" x:Shared="False">
+                <Canvas Width="24" Height="24">
+                    <Path Data="M17,13L12,18L7,13H10V9H14V13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z" Fill="#FF1FBB09"  />
+                </Canvas>
+            </Viewbox>
+            <local:ValueToImageConverter x:Key="_stsIconConverter" />
         </Grid.Resources>
         <Label Content="专辑ID" Margin="255,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" />
         <TextBox x:Name="txtAlbumId" Margin="315,10,0,0" TextWrapping="Wrap" Text="{Binding AlbumID}" Width="98" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" HorizontalContentAlignment="Left" FontSize="16" VerticalContentAlignment="Center" AcceptsReturn="False" />
@@ -67,9 +78,6 @@
                         <Trigger Property="IsSelected"  Value="True">
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
-                        <DataTrigger Binding="{Binding Downloaded}" Value="True">
-                            <Setter Property="Background" Value="LightGreen"/>
-                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
                 <Style x:Key="RightAlignmentStyle" TargetType="DataGridCell" BasedOn="{StaticResource CenterValignmentStyle}">
@@ -89,6 +97,13 @@
                 <DataGridTextColumn Header="标题" Binding="{Binding TrackTitle}" Width="255" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" CellStyle="{StaticResource CenterValignmentStyle}"  />
                 <DataGridTextColumn Header="时长" Binding="{Binding Duration,StringFormat=c}" Width="65" CanUserSort="False" CanUserResize="True" IsReadOnly="True" HeaderStyle="{StaticResource CenterGridHeaderStyle}" CellStyle="{StaticResource CenterValignmentStyle}"  />
                 <DataGridTextColumn Header="播放地址" Binding="{Binding DownloadUrl}" Width="*" CanUserSort="False" CanUserResize="True" IsReadOnly="True" FontSize="9" HeaderStyle="{StaticResource CenterGridHeaderStyle}" CellStyle="{StaticResource CenterValignmentStyle}"  />
+                <DataGridTemplateColumn Header="" Width="30" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <ContentControl Content="{Binding Status, Converter={StaticResource _stsIconConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Border BorderBrush="#FF9E8A8A" BorderThickness="1" Height="1"  VerticalAlignment="Top" Margin="10,80,10,0"/>
