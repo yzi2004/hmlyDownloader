@@ -155,6 +155,12 @@ namespace hmlyDownloader
             for (int idx = pauseIndex; idx < Data.Count; idx++)
             {
                 var item = Data[idx];
+                SelectedIndex = idx;
+
+                if (string.IsNullOrWhiteSpace(item.DownloadUrl))
+                {
+                    continue;
+                }
 
                 string destFile = $"{Utils.EnsureFolder(Path, AlbumTitle)}\\{(AddFileNo ? idx.ToString() + "." : "")}{Utils.EnsureFileName(item.TrackTitle)}.{(UseMp3Fmt ? "mp3" : "m4a")}";
                 item.Status = "downloading";
@@ -173,12 +179,11 @@ namespace hmlyDownloader
                 }
 
                 TotalProgress = (idx + 1) * 100.0 / Data.Count;
-                SelectedIndex = idx;
-                Thread.Sleep(2000);
+
+                Thread.Sleep(500);
 
                 item.Status = "done";
                 WeakReferenceMessenger.Default.Send<CustomMessenger>(new() { action = CustomMessenger.ACTION.scrollview });
-
             }
 
             if (pauseIndex == Data.Count - 1)
@@ -216,7 +221,7 @@ namespace hmlyDownloader
         public ObservableCollection<TrackItem> Data { get; set; }
     }
 
-    internal class TrackItem
+    internal class TrackItem : ObservableRecipient
     {
         public string AlbumTitle { get; set; }
         public int No { get; set; }
@@ -229,6 +234,15 @@ namespace hmlyDownloader
 
         public string DownloadUrl { get; set; }
 
-        public string Status { get; set; }
+        private string _status = "downloading";
+        public string Status
+        {
+            get { return _status; }
+            set 
+            {
+                _status = value;
+                OnPropertyChanged("Status");
+            }
+        }
     }
 }

@@ -11,11 +11,11 @@ namespace hmlyDownloader
         {
             if ((string)(value ?? "") == "downloading")
             {
-                return Application.Current.Resources["i_downloading"];
+                return Application.Current.MainWindow.Resources["i_downloading"];
             }
             else if ((string)(value ?? "") == "done")
             {
-                return Application.Current.Resources["i_done"];
+                return Application.Current.MainWindow.Resources["i_done"];
             }
             else
             {
